@@ -50,7 +50,7 @@ namespace Serialize
     template <class Format, class T>
     struct DefaultDeserializer<Format, T, true>
     {
-        void serialize(IInputStream &in, T &object)
+        void deserialize(IInputStream &in, T &object)
         {
             object.deserialize(in);
         }

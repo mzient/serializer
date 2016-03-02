@@ -42,11 +42,11 @@ namespace Serialize
     
 
     template <class T>
-    struct DefaultSerializer<BinaryFormat, T, false> : RawBinarySerializer<T>
+    struct DefaultSerializer<BinaryFormat, T> : RawBinarySerializer<T>
     {};
     
     template <class T>
-    struct DefaultDeserializer<BinaryFormat, T, false> : RawBinaryDeserializer<T>
+    struct DefaultDeserializer<BinaryFormat, T> : RawBinaryDeserializer<T>
     {};
     
     template <class T>

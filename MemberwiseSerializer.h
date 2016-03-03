@@ -51,7 +51,7 @@ namespace Serialize
         void deserialize(IInputStream &in, T &object)
         {
             MemberDeserializer<Format> D(in);
-            memberwise<serialization_purpose<Format>>(object, D);
+            memberwise<deserialization_purpose<Format>>(object, D);
         }
     };
 }

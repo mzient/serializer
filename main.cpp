@@ -27,7 +27,7 @@ struct HexStream : Serialize::IOutputStream
     }
 };
 
-/*struct A : Serialize::IBinarySerializable
+struct A : Serialize::IBinarySerializable
 {
     A(int x) : x(x) {}
     virtual void serialize(Serialize::IOutputStream &out) const
@@ -45,28 +45,20 @@ struct X : Serialize::IBinarySerializable
         binary(out) << x;
     }
 };
-*/
-namespace Serialize
-{
-
-
-}
 
 struct S
 {
     int x, y, z;
-    string a;
+    string s;
 };
-SERIALIZE_MEMBERS(Serialize::BinaryFormat, S, x, y, z, a);
+SERIALIZE_MEMBERS(Serialize::BinaryFormat, S, x, y, z, s);
 
-struct printer
+struct SS
 {
-    template <class T>
-    void operator()(const T &data)
-    {
-        cout << data << " ";
-    }
+    int a, b, c;
+    S s;
 };
+SERIALIZE_MEMBERS(Serialize::BinaryFormat, SS, a, b, c, s);
 
 /*
  *
@@ -74,8 +66,8 @@ struct printer
 int main(int argc, char** argv)
 {
     HexStream hs;
-    S s = { 1, 2, 3, "ala ma kota" };
-    //X x;
+    SS s = { 101, 102, 103, { 1, 2, 3, "ala ma kota" } };
+
     binary(hs) << s;
 
     return 0;

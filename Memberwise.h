@@ -73,6 +73,7 @@ void memberwise(target &tgt, functor f)
 #define MEMBER_LIST_ELEM(unused, type, x) , MEMBER(type, x)
 #define MEMBER_LIST_ARGS(Type, ...) BOOST_PP_SEQ_FOR_EACH(MEMBER_LIST_ELEM, Type, BOOST_PP_VARIADIC_TO_SEQ(__VA_ARGS__))
 #define MEMBER_LIST(Type, ...) template <> struct member_list<Type> : decltype(member_ptr_list<>() MEMBER_LIST_ARGS(Type, __VA_ARGS__)) {}
+#define MEMBER_LIST_PURPOSE(Purpose, Type, ...) template <> struct member_list<Type, Purpose> : decltype(member_ptr_list<>() MEMBER_LIST_ARGS(Type, __VA_ARGS__)) {}
 
 
 #endif	/* MEMBERWISE_H */

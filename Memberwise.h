@@ -45,14 +45,36 @@ member_ptr_list<member_ptr<member_ptr1, ptr1>, member_ptr<member_ptr2, ptr2>> op
 
 
 template <class target, class functor>
-constexpr void apply(target &tgt, member_ptr_list<>, functor f)
+constexpr void apply(member_ptr_list<>, functor f, target &tgt)
 {}
 
 template <class target, class member0, class... members, class functor>
-void apply(target &tgt, member_ptr_list<member0, members...>, functor f)
+void apply(member_ptr_list<member0, members...>, functor f, target &tgt)
 {
     f(tgt.*member0::get());
-    apply(tgt, member_ptr_list<members...>(), f);
+    apply(member_ptr_list<members...>(), f, tgt);
+}
+
+template <class target, class functor>
+constexpr void apply(member_ptr_list<>, functor f, target &tgt1, target &tgt2)
+{}
+
+template <class target, class member0, class... members, class functor>
+void apply(member_ptr_list<member0, members...>, functor f, target &tgt1, target &tgt2)
+{
+    f(tgt1.*member0::get(), tgt2.*member0::get());
+    apply(member_ptr_list<members...>(), f, tgt1, tgt2);
+}
+
+template <class target, class functor>
+constexpr void apply(member_ptr_list<>, functor f, target &tgt1, target &tgt2, target &tgt3)
+{}
+
+template <class target, class member0, class... members, class functor>
+void apply(member_ptr_list<member0, members...>, functor f, target &tgt1, target &tgt2, target &tgt3)
+{
+    f(tgt1.*member0::get(), tgt2.*member0::get(), tgt3.*member0::get());
+    apply(member_ptr_list<members...>(), f, tgt1, tgt2, tgt3);
 }
 
 
@@ -60,15 +82,38 @@ template <class type, class purpose_tag = void>
 struct member_list : member_ptr_list<> {};
 
 template <class purpose_tag = void, class target, class functor>
-void memberwise(const target &tgt, functor f)
+void memberwise(functor f, const target &tgt)
 {
-    apply(tgt, member_list<target, purpose_tag>(), f);
+    apply(member_list<target, purpose_tag>(), f, tgt);
 }
 template <class purpose_tag = void, class target, class functor>
-void memberwise(target &tgt, functor f)
+void memberwise(functor f, target &tgt)
 {
-    apply(tgt, member_list<target, purpose_tag>(), f);
+    apply(member_list<target, purpose_tag>(), f, tgt);
 }
+
+template <class purpose_tag = void, class target, class functor>
+void memberwise(functor f, const target &tgt1, const target &tgt2)
+{
+    apply(member_list<target, purpose_tag>(), f, tgt1, tgt2);
+}
+template <class purpose_tag = void, class target, class functor>
+void memberwise(functor f, target &tgt1, target &tgt2)
+{
+    apply(member_list<target, purpose_tag>(), f, tgt1, tgt2);
+}
+
+template <class purpose_tag = void, class target, class functor>
+void memberwise(functor f, const target &tgt1, const target &tgt2, const target &tgt3)
+{
+    apply(member_list<target, purpose_tag>(), f, tgt1, tgt2, tgt3);
+}
+template <class purpose_tag = void, class target, class functor>
+void memberwise(functor f, target &tgt1, target &tgt2, target &tgt3)
+{
+    apply(member_list<target, purpose_tag>(), f, tgt1, tgt2, tgt3);
+}
+
 
 #define MEMBER_LIST_ELEM(unused, type, x) , MEMBER(type, x)
 #define MEMBER_LIST_ARGS(Type, ...) BOOST_PP_SEQ_FOR_EACH(MEMBER_LIST_ELEM, Type, BOOST_PP_VARIADIC_TO_SEQ(__VA_ARGS__))
